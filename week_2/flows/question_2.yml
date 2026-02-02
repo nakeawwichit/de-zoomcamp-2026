@@ -1,0 +1,23 @@
+id: question_2
+namespace: zoomcamp.week2
+inputs:
+  - id: taxi
+    type: SELECT
+    defaults: green
+    values:
+      - yellow
+      - green
+  - id: year
+    type: STRING
+    defaults: "2020"
+  - id: month
+    type: STRING
+    defaults: "04"
+
+variables:
+  file: "{{inputs.taxi}}_tripdata_{{inputs.year}}-{{inputs.month}}.csv"
+
+tasks:
+  - id: log_variable
+    type: io.kestra.plugin.core.log.Log
+    message: "The rendered value of the variable 'file' is: {{ render(vars.file) }}"

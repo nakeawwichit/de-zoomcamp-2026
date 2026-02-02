@@ -1,0 +1,41 @@
+id: question_1
+namespace: zoomcamp.week_2
+
+inputs:
+  - id: taxi
+    type: SELECT
+    displayName: Select taxi type
+    values: [yellow, green]
+    defaults: yellow
+  - id: year
+    type: STRING
+    defaults: "2020"
+  - id: month
+    type: STRING
+    defaults: "12"
+tasks:
+  - id: extract
+    type: io.kestra.plugin.core.http.Download
+    uri: "https://github.com/DataTalksClub/nyc-tlc-data/releases/download/{{inputs.taxi}}/{{inputs.taxi}}_tripdata_{{inputs.year}}-{{inputs.month}}.csv.gz"
+
+  - id: log_file_size
+    type: io.kestra.plugin.core.log.Log
+    message: |
+      File: {{inputs.taxi}}_tripdata_{{inputs.year}}-{{inputs.month}}.csv.gz
+      URI: {{outputs.extract.uri}}
+
+  - id: uncompress_and_check_size
+    type: io.kestra.plugin.scripts.shell.Commands
+    inputFiles:
+      data.csv.gz: "{{outputs.extract.uri}}"
+    commands:
+      - echo "Checking compressed file size..."
+      - du -h data.csv.gz
+      - gunzip -c data.csv.gz > {{inputs.taxi}}_tripdata_{{inputs.year}}-{{inputs.month}}.csv
+      - echo "Checking size of uncompressed file (Human Readable)..."
+      - ls -lh {{inputs.taxi}}_tripdata_{{inputs.year}}-{{inputs.month}}.csv
+      - echo "Exact Size in bytes:"
+      - wc -c {{inputs.taxi}}_tripdata_{{inputs.year}}-{{inputs.month}}.csv
+      - echo "Size in MiB:"
+      - wc -c {{inputs.taxi}}_tripdata_{{inputs.year}}-{{inputs.month}}.csv | awk '{print $1/1048576 " MiB"}'
+      

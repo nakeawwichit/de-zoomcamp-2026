@@ -1,0 +1,15 @@
+id: question_6
+namespace: zoomcamp.week2
+
+triggers:
+  - id: daily_schedule
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 9 * * *" # Run at 9:00 AM
+    timezone: "America/New_York" # <--- นี่คือคำตอบครับ
+
+tasks:
+  - id: check_timezone
+    type: io.kestra.plugin.core.log.Log
+    message: |
+      Trigger configured with timezone: America/New_York
+      Current Server Time: {{ now() }}

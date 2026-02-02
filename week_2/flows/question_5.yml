@@ -1,0 +1,45 @@
+id: question_5
+namespace: zoomcamp.week2
+
+tasks:
+  - id: calculate_rows_march_2021
+    type: io.kestra.plugin.scripts.python.Script
+    taskRunner:
+      type: io.kestra.plugin.scripts.runner.docker.Docker
+    containerImage: python:3.10-slim
+    beforeCommands:
+      - pip install requests
+    script: |
+      import requests
+      import gzip
+      import shutil
+      import os
+
+      # Specific target: Yellow Taxi, March 2021
+      url = "https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-03.csv.gz"
+      file_name = "yellow_tripdata_2021-03.csv.gz"
+      
+      print(f"Downloading {url}...")
+      try:
+          with requests.get(url, stream=True) as r:
+              r.raise_for_status()
+              with open(file_name, 'wb') as f:
+                  shutil.copyfileobj(r.raw, f)
+          
+          print(f"Counting rows for March 2021...")
+          
+          count = 0
+          with gzip.open(file_name, 'rt', encoding='utf-8') as f:
+              for i, _ in enumerate(f):
+                  count = i
+          
+          # count = index of last line. i=0 is header. i=1 is first data row.
+          # If i=N, it means there are N data rows (excluding header).
+          
+          print(f"Rows in Yellow Taxi March 2021: {count}")
+          
+          # Clean up
+          os.remove(file_name)
+          
+      except Exception as e:
+          print(f"Error processing file: {e}")
