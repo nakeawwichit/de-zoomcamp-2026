@@ -3,3 +3,6 @@
 *.tfstate.backup
 .env
 __pycache__/
+
+venv/
+service_account.json
