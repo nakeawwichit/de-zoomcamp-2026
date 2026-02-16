@@ -6,3 +6,6 @@ __pycache__/
 
 venv/
 service_account.json
+downloads/
+*.parquet
+*.csv
