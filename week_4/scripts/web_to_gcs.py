@@ -36,21 +36,32 @@ def download_file(url, local_path):
         return False
 
 def standardize_schema(local_path):
-    """Reads parquet file, fixes schema (ehail_fee), and returns path to fixed file."""
     try:
-        print(f"Standardizing schema for: {local_path}")
         df = pd.read_parquet(local_path)
         
-        # schema fixes
-        if 'ehail_fee' in df.columns:
-            df['ehail_fee'] = df['ehail_fee'].astype(float)
+        # 1. บังคับคอลัมน์เงิน/ตัวเลขทศนิยมให้เป็น float64 ให้หมด
+        float_cols = [
+            'fare_amount', 'extra', 'mta_tax', 'tip_amount', 'tolls_amount', 
+            'improvement_surcharge', 'total_amount', 'congestion_surcharge', 
+            'airport_fee', 'ehail_fee'
+        ]
+        for col in float_cols:
+            if col in df.columns:
+                df[col] = pd.to_numeric(df[col], errors='coerce').astype(float)
         
-        # Write back to parquet using pyarrow engine to ensure compatibility
+        # 2. บังคับ ID ให้เป็น Int64 (Nullable Integer) เพื่อป้องกัน 1.0 กลายเป็น 1
+        # หมายเหตุ: ชื่อคอลัมน์ในไฟล์อาจเป็นตัวเล็กตัวใหญ่ผสมกัน (VendorID vs vendorid)
+        df.columns = [c.lower() for c in df.columns] # ทำเป็นตัวเล็กให้หมดเพื่อความง่าย
+        
+        id_cols = ['vendorid', 'ratecodeid', 'pulocationid', 'dolocationid', 'payment_type']
+        for col in id_cols:
+            if col in df.columns:
+                df[col] = pd.to_numeric(df[col], errors='coerce').astype('Int64')
+
         df.to_parquet(local_path, engine='pyarrow')
-        print(f"Schema standardized: {local_path}")
         return local_path
     except Exception as e:
-        print(f"Error standardizing schema for {local_path}: {e}")
+        print(f"Error standardizing {local_path}: {e}")
         return None
 
 def upload_to_gcs(bucket_name, object_name, local_file):

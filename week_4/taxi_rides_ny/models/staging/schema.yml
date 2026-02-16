@@ -1,4 +1,20 @@
+version: 2
+
+sources:
+  - name: raw
+    database: de-zoomcamp-484115 # ตรวจสอบว่า Project ID ถูกต้อง
+    schema: trips_data_all # ตรวจสอบว่า Dataset ชื่อนี้ใน BigQuery
+    tables:
+      - name: green_tripdata
+      - name: yellow_tripdata
+      - name: fhv_tripdata # เพิ่มตารางนี้เข้าไปเพื่อให้รัน stg_fhv ได้
+
 models:
+  - name: stg_fhv_tripdata # เพิ่มการนิยามโมเดล FHV ด้วยครับ
+    description: Staging model for FHV data.
+    columns:
+      - name: dispatching_base_num
+        description: Base number for FHV dispatch.
   - name: stg_green_tripdata
     description: >
       Staging model for green taxi trip data. This model standardizes column names

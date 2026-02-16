@@ -5,10 +5,10 @@ with source as (
 renamed as (
     select
         -- identifiers (standardized naming for consistency across yellow/green)
-        cast(VendorID as integer) as vendor_id,
-        {{ safe_cast('RatecodeID', 'integer') }} as rate_code_id,
-        cast(PULocationID as integer) as pickup_location_id,
-        cast(DOLocationID as integer) as dropoff_location_id,
+        cast(vendorid as integer) as vendor_id,
+        cast(ratecodeid as integer) as rate_code_id,
+        cast(pulocationid as integer) as pickup_location_id,
+        cast(dolocationid as integer) as dropoff_location_id,
 
         -- timestamps (standardized naming)
         cast(tpep_pickup_datetime as timestamp) as pickup_datetime,  -- tpep = Taxicab Passenger Enhancement Program (yellow taxis)
@@ -31,12 +31,9 @@ renamed as (
 
     from source
     -- Filter out records with null vendor_id (data quality requirement)
-    where VendorID is not null
+    where vendorid is not null
 )
 
 select * from renamed
-
--- Sample records for dev environment using deterministic date filter
-{% if target.name == 'dev' %}
-where pickup_datetime >= '2019-01-01' and pickup_datetime < '2019-02-01'
-{% endif %}
+-- กรองเอาเฉพาะปีที่โจทย์ต้องการ เพื่อกำจัดปี 2090 หรือปีแปลกๆ ทิ้ง
+where pickup_datetime >= '2019-01-01' and pickup_datetime < '2021-01-01'
