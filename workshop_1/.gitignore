@@ -10,3 +10,6 @@ downloads/
 *.parquet
 *.csv
 .bruin.yml
+.cursor
+.dlt
+.venv
