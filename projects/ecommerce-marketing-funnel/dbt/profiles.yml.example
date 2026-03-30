@@ -1,0 +1,12 @@
+ecommerce_marketing_funnel:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: oauth
+      project: "{{ env_var('GCP_PROJECT_ID') }}"
+      dataset: "{{ env_var('BQ_DATASET_MART') }}"
+      threads: 4
+      timeout_seconds: 300
+      location: "{{ env_var('GCP_REGION', 'US') }}"
+      priority: interactive

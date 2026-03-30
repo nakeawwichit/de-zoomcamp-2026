@@ -1,0 +1,18 @@
+name: "ecommerce_marketing_funnel"
+version: "1.0.0"
+config-version: 2
+
+profile: "ecommerce_marketing_funnel"
+
+model-paths: ["models"]
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  ecommerce_marketing_funnel:
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table

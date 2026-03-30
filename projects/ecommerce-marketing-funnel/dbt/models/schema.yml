@@ -1,0 +1,56 @@
+version: 2
+
+sources:
+  - name: staging
+    database: "{{ env_var('GCP_PROJECT_ID') }}"
+    schema: "{{ env_var('BQ_DATASET_STAGING') }}"
+    tables:
+      - name: stg_olist_orders_raw
+      - name: stg_olist_order_items_raw
+      - name: stg_olist_products_raw
+      - name: stg_category_translation_raw
+
+models:
+  - name: stg_olist_orders
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+          - unique
+      - name: order_date
+        tests:
+          - not_null
+
+  - name: stg_olist_order_items
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_olist_orders')
+              field: order_id
+      - name: product_id
+        tests:
+          - not_null
+
+  - name: stg_olist_products
+    columns:
+      - name: product_id
+        tests:
+          - not_null
+          - unique
+
+  - name: mart_category_daily_performance
+    columns:
+      - name: order_date
+        tests:
+          - not_null
+      - name: product_category
+        tests:
+          - not_null
+
+  - name: mart_order_lifecycle_funnel_daily
+    columns:
+      - name: order_date
+        tests:
+          - not_null

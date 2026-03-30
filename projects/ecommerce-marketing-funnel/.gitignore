@@ -1,0 +1,35 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Secrets and local config (never commit)
+.env
+service_account.json
+service-account.json
+*credentials*.json
+
+# dbt
+dbt/target/
+dbt/dbt_packages/
+dbt/logs/
+
+# Terraform — keep .tf and .terraform.lock.hcl; ignore local state and plugins
+terraform/.terraform/
+terraform/*.tfvars
+!terraform/terraform.tfvars.example
+terraform.tfstate
+terraform.tfstate.backup
+*.tfstate.*
+
+# Raw data (download from Kaggle; large)
+data/raw/*.csv
+
+# IDE / OS
+.DS_Store
+.idea/
+.vscode/

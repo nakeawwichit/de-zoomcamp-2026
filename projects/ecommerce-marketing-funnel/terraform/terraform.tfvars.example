@@ -1,0 +1,7 @@
+project_id         = "your-gcp-project-id"
+region             = "us-central1"
+bq_location        = "US"
+bucket_name        = "dezoomcamp-ecom-funnel-raw-unique"
+bq_dataset_staging = "ecom_staging"
+bq_dataset_mart    = "ecom_mart"
+service_account_id = "ecom-funnel-pipeline"
