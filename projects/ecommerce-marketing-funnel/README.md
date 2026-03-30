@@ -45,6 +45,7 @@ Note: this is not a web event funnel (`view -> cart -> purchase`).
 - `orchestration/`: Airflow DAG for end-to-end batch run
 - `dbt/`: staging and mart models with tests
 - `dashboard/`: Streamlit app
+- `screenshots/`: README preview images
 - `terraform/`: GCP infrastructure (GCS, BigQuery datasets, IAM)
 
 ## Prerequisites
@@ -183,6 +184,10 @@ cd dashboard
 pip install -r requirements.txt
 streamlit run app.py
 ```
+
+## Dashboard preview
+
+![E-commerce Marketing Funnel Dashboard — revenue by category and daily order lifecycle](screenshots/Screenshot.png)
 
 ## Dashboard tiles
 
